@@ -25,6 +25,7 @@ void conversionBinario(ARCHIVO *data, ARCHIVO *resultado);
 unsigned char codificar(unsigned char cinco);
 unsigned char sacar5bits(ARCHIVO *arch, int n);
 void meter5bits(ARCHIVO *arch, int n, unsigned char bits);
+void impresion(unsigned char var);
 
 int main(int argc, char* argv[])
 {
@@ -92,18 +93,97 @@ int main(int argc, char* argv[])
  */
 void conversionTexto(ARCHIVO *arch, ARCHIVO *resultado)
 {
+	/*** Variables de los recorridos ***/
 	int i;
-	unsigned char info[(int) ceil((arch->tamanho*8)/5)];
-	for (i = 0; i < (int) ceil((arch->tamanho*8)/5); ++i) {
-		info[i] = arch->informacion[0];
-		info[i] >>= 3;
-		char val = arch->informacion[0];
-		(val >>= 7) == 1 ? info[i] | 32: info[i] | 64;
-		*arch->informacion <<= 5;
+	int j;
+
+	/*** Se define el tamaño del nuevo arreglo de chars ***/
+	int tamanho = (int) (ceil((arch->tamanho*8)/5)+1);
+
+	/*** Se inicializa del nuevo arreglo de chars ***/
+	unsigned char informacion[tamanho];
+
+	for (i = 0; i < tamanho; ++i) {
+
+		/***
+		 *** Se iguala el char de la posicion i de info con el char
+		 *** en la primera posición de la información del archivo
+		 ***/
+		informacion[i] = arch->informacion[0];
+
+		/***
+		 *** Se hace el corrimiento de 3 birs a la derecha para poder
+		 *** introducir el encabezado
+		 ***/
+		informacion[i] = informacion[i]>>3;
+
+		/***
+		 ***	En esta parte se determina si el bit más significativo del grupo
+		 *** de 5 es 1 ó 0 para poder colocar el encabezado de manera adecuada.
+		 ***/
+		unsigned char val = arch->informacion[0];
+		val >>= 7;
+		if(val == 1) {
+			/***
+			 *** Se usa el 32, pues es 100000. Es decir, el bit 6
+			 *** es 1 y así el or con este número hará que se de
+			 *** un 1 en el tercer bit del encabezado
+			 ***/
+			informacion[i] |= 32;
+		} else {
+			/***
+			 *** Se usa el 64, pues es 1000000. Es decir, el bit 7
+			 *** es 1 y así el or con este número hará que se de
+			 *** un 1 en el segundo bit del encabezado
+			 ***/
+			informacion[i] |= 64;
+		}
+
+		unsigned char temporal;
+		unsigned char temporal2;
+		for (j = 0; j < arch->tamanho; ++j) {
+			/***
+			 *** Se desplazan 5 bits a la izquierda para eliminar los que ya
+			 ***	fueron procesados y guardados en información y dejar sólo los
+			 *** pertenecientes al siguiente grupo de 5 que se almacenan en ese byte
+			 ***/
+			temporal = arch->informacion[j] << 5;
+
+			/***
+			 *** Se desplazan 3 bits a la derecha en el byte en la posición j+1
+			 *** para dar el espacio de los 3 bits que estaban en el byte anterior y
+			 *** 2 bits del byte que sigue al presente.
+			 ***/
+			temporal2 = arch->informacion[j+1] >> 3;
+
+			/***
+			 *** Se realiza el temporal or temporal2 y se almacena en el byte de la
+			 *** posición j. Cabe resaltar que siempre se mueve el siguiente byte a
+			 *** leer a la primera posición del arreglo de información del archivo
+			 *** y se van completando los demás con 0. Así, si se tiene la necesidad
+			 *** de usar bits de relleno, irán implicitos como si pertenecieran a la
+			 *** información.
+			 ***/
+			arch->informacion[j] = temporal | temporal2;
+		}
 	}
-	resultado->informacion = info;
-	resultado->tamanho = (int) sizeof(info)/sizeof(info[0]);
-	// Por probar
+	/*** Se pasa la información codificada al archivo resultado ***/
+	resultado->tamanho = (int) sizeof(informacion)/sizeof(informacion[0]);
+	for (i = 0; i < tamanho; ++i) {
+		resultado->informacion[i] = informacion[i];
+	}
+}
+
+void impresion(unsigned char var) {
+	unsigned int contador, inicio = 128;
+	for(contador = inicio; contador > 0; contador >>= 1) {
+		if(contador & var) {
+			printf("1");
+		} else {
+			printf("0");
+		}
+	}
+	printf("\n");
 }
 
 /*
@@ -122,6 +202,11 @@ unsigned char sacar5bits(ARCHIVO *arch, int n)
 void meter5bits(ARCHIVO *arch, int n, unsigned char bits)
 {
 	//TODO: DESARROLLAR COMPLETAMENTE ESTA FUNCION
+	arch->informacion[n] >>= 5;
+	arch->informacion[n] <<= 5;
+	bits <<= 3;
+	bits >>= 3;
+	arch->informacion[n] |= bits;
 }
 
 /*
@@ -129,16 +214,30 @@ void meter5bits(ARCHIVO *arch, int n, unsigned char bits)
  */
 unsigned char codificar(unsigned char cinco)
 {
-	//TODO: DESARROLLAR COMPLETAMENTE ESTA FUNCION
+	cinco <<= 3;
+	unsigned char val = cinco;
+	val >>= 7;
+	cinco >>= 3;
+	if(val == 1) {
+		cinco |= 32;
+	} else {
+		cinco |= 64;
+	}
+	return cinco;
 }
 
 /*
- * Procedimiento que convierte la informaci�n en ASCII de la estructura ARCHIVO apuntada por 'data' (archivo de texto) * y la guarda en la estructura ARCHIVO apuntada por 'resultado'.
- * como una serie de bytes en la que a cada caracter se le extraen sus �ltimos 5 bits y se guardan en la salida unos a continuaci�n de los otros
+ * Procedimiento que convierte la información en ASCII de la estructura ARCHIVO apuntada por 'data' (archivo de texto) * y la guarda en la estructura ARCHIVO apuntada por 'resultado'.
+ * como una serie de bytes en la que a cada caracter se le extraen sus �ltimos 5 bits y se guardan en la salida unos a continuación de los otros
  */
 void conversionBinario(ARCHIVO *data, ARCHIVO *resultado)
 {
 	//TODO: DESARROLLAR COMPLETAMENTE ESTA FUNCION
+	int i;
+	unsigned char temp;
+	for (i = 0; i < data->tamanho; ++i) {
+		data->informacion[i] <<= 3;
+	}
 }
 
 /*
@@ -149,7 +248,6 @@ void cargarArchivo(ARCHIVO *data, char *nomArchivoEntrada)
 	FILE *streamArchivo;
 	int tam;
 	unsigned char * aux;
-	int i;
 
 	if (!(streamArchivo = fopen(nomArchivoEntrada, "rb")))
 	{
