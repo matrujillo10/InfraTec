@@ -46,8 +46,6 @@ int main(int argc, char* argv[])
 	//Se cargan los datos del archivo de entrada en la variable arch de tipo ARCHIVO
 	cargarArchivo(arch, argv[1]);
 
-
-
 	printf("Indique la accion\n\t1) Codificar en ASCII:\n\t2) Decodificar:\n\n");//Se pregunta al usuario cu�l opci�n desea realizar
 
 	scanf("%c", &op);
@@ -197,7 +195,67 @@ void impresion(unsigned char var) {
  */
 unsigned char sacar5bits(ARCHIVO *arch, int n)
 {
-	//TODO: DESARROLLAR COMPLETAMENTE ESTA FUNCION
+	// hola = 01101000-01101111-01101100-01100001
+	// Grupos: 01101-00001-10111-10110-11000-11000-01000
+
+	/***
+	 *** Forma un arreglo de chars con los grupos separados en diferentes
+	 *** campos y finalmente saca el char de la posición n.
+	 ***/
+
+	/*** Variables de los recorridos ***/
+	int i;
+	int j;
+
+	/*** Se define el tamaño del nuevo arreglo de chars ***/
+	int tamanho = (int) (ceil((arch->tamanho*8)/5)+1);
+
+	/*** Se inicializa del nuevo arreglo de chars ***/
+	unsigned char informacion[tamanho];
+
+	for (i = 0; i < tamanho; ++i) {
+
+		/***
+		 *** Se iguala el char de la posicion i de info con el char
+		 *** en la primera posición de la información del archivo
+		 ***/
+		informacion[i] = arch->informacion[0];
+
+		/***
+		 *** Se hace el corrimiento de 3 bits a la derecha para dejar
+		 *** la información en los bits menos significativos
+		 ***/
+		informacion[i] = informacion[i]>>3;
+
+		unsigned char temporal;
+		unsigned char temporal2;
+		for (j = 0; j < arch->tamanho; ++j) {
+			/***
+			 *** Se desplazan 5 bits a la izquierda para eliminar los que ya
+			 *** fueron procesados y guardados en información y dejar sólo los
+			 *** pertenecientes al siguiente grupo de 5 que se almacenan en ese byte
+			 ***/
+			temporal = arch->informacion[j] << 5;
+
+			/***
+			 *** Se desplazan 3 bits a la derecha en el byte en la posición j+1
+			 *** para dar el espacio de los 3 bits que estaban en el byte anterior y
+			 *** 2 bits del byte que sigue al presente.
+			 ***/
+			temporal2 = arch->informacion[j+1] >> 3;
+
+			/***
+			 *** Se realiza el temporal or temporal2 y se almacena en el byte de la
+			 *** posición j. Cabe resaltar que siempre se mueve el siguiente byte a
+			 *** leer a la primera posición del arreglo de información del archivo
+			 *** y se van completando los demás con 0. Así, si se tiene la necesidad
+			 *** de usar bits de relleno, irán implicitos como si pertenecieran a la
+			 *** información.
+			 ***/
+			arch->informacion[j] = temporal | temporal2;
+		}
+	}
+	return informacion[n-1];
 }
 
 /*
