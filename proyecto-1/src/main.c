@@ -6,7 +6,6 @@ PROYECTO 1 FUNDAMENTOS DE INFRAESTRUCTURA TECNOLÓGICA
 #include "stdio.h"
 #include <math.h>
 
-//AQUI VAN LOS NOMBRES Y CODIGOS DE LOS INTEGRANTES DEL GRUPO
 /**
  * Miller Andrés Trujillo - 201517402
  */
@@ -118,23 +117,25 @@ void conversionTexto(ARCHIVO *arch, ARCHIVO *resultado)
 		informacion[i] = informacion[i]>>3;
 
 		/***
-		 ***	En esta parte se determina si el bit más significativo del grupo
+		 *** En esta parte se determina si el bit más significativo del grupo
 		 *** de 5 es 1 ó 0 para poder colocar el encabezado de manera adecuada.
 		 ***/
 		unsigned char val = arch->informacion[0];
 		val >>= 7;
 		if(val == 1) {
 			/***
-			 *** Se usa el 32, pues es 100000. Es decir, el bit 6
-			 *** es 1 y así el or con este número hará que se de
-			 *** un 1 en el tercer bit del encabezado
+			 *** Se usa el 32, pues es 100000 en binario. Es decir,
+			 *** el bit 6 es 1 y así el OR con este número hará que
+			 *** se de un 1 en el tercer bit del encabezado, el
+			 *** bit 7 del byte i de informacion.
 			 ***/
 			informacion[i] |= 32;
 		} else {
 			/***
-			 *** Se usa el 64, pues es 1000000. Es decir, el bit 7
-			 *** es 1 y así el or con este número hará que se de
-			 *** un 1 en el segundo bit del encabezado
+			 *** Se usa el 64, pues es 1000000 en binario. Es decir,
+			 *** el bit 7 es 1 y así el OR con este número hará que
+			 *** se de un 1 en el segundo bit del encabezado, el
+			 *** bit 7 del byte i de informacion.
 			 ***/
 			informacion[i] |= 64;
 		}
@@ -144,7 +145,7 @@ void conversionTexto(ARCHIVO *arch, ARCHIVO *resultado)
 		for (j = 0; j < arch->tamanho; ++j) {
 			/***
 			 *** Se desplazan 5 bits a la izquierda para eliminar los que ya
-			 ***	fueron procesados y guardados en información y dejar sólo los
+			 *** fueron procesados y guardados en información y dejar sólo los
 			 *** pertenecientes al siguiente grupo de 5 que se almacenan en ese byte
 			 ***/
 			temporal = arch->informacion[j] << 5;
@@ -174,6 +175,10 @@ void conversionTexto(ARCHIVO *arch, ARCHIVO *resultado)
 	}
 }
 
+/*
+ *  Sólo se usa para debugear
+ */
+// TODO ¡¡¡¡¡¡BORRAR AL TERMINAR!!!!!!
 void impresion(unsigned char var) {
 	unsigned int contador, inicio = 128;
 	for(contador = inicio; contador > 0; contador >>= 1) {
@@ -202,11 +207,6 @@ unsigned char sacar5bits(ARCHIVO *arch, int n)
 void meter5bits(ARCHIVO *arch, int n, unsigned char bits)
 {
 	//TODO: DESARROLLAR COMPLETAMENTE ESTA FUNCION
-	arch->informacion[n] >>= 5;
-	arch->informacion[n] <<= 5;
-	bits <<= 3;
-	bits >>= 3;
-	arch->informacion[n] |= bits;
 }
 
 /*
@@ -214,16 +214,49 @@ void meter5bits(ARCHIVO *arch, int n, unsigned char bits)
  */
 unsigned char codificar(unsigned char cinco)
 {
-	cinco <<= 3;
-	unsigned char val = cinco;
-	val >>= 7;
-	cinco >>= 3;
+	unsigned char rta = cinco;
+
+	/***
+	 *** Corre 3 bits a la izquierda para eliminar los bits sin información
+	 *** y dejar en 0 los bits menos significativos, teniendo los datos entre
+	 *** el bit 8 y el 4. Para quedar así: XXXXX000
+	 ***/
+	rta <<= 3;
+
+	/***
+	 *** Mueve 7 bits a la derecha los bits del byte cinco y guarda el valor
+	 *** en la variable val. En teoría, debería quedar siete ceros a la
+	 *** izquierda y el bit menos significativo representa el bit más significativo
+	 *** de la información que trae cinco. Para quedar así: 0000000X
+	 ***/
+	unsigned char val = rta >> 7;
+
+	/***
+	 *** Se corre 3 bits a la derecha. Para quedar así: 000XXXXX
+	 ***/
+	rta >>= 3;
+
+	/***
+	 *** Si el valor de la variable val es 1, significa que el bit más significativo
+	 *** de la información es 1. De lo contrario, será 0.
+	 ***/
 	if(val == 1) {
-		cinco |= 32;
+		/***
+		 *** Se usa el 32, pues es 100000 en binario. Es decir,
+		 *** el bit 6 es 1 y así el OR con este número hará que
+		 *** se de un 1 en el tercer bit del encabezado.
+		 ***/
+		rta |= 32;
 	} else {
-		cinco |= 64;
+		/***
+		 *** Se usa el 64, pues es 1000000 en binario. Es decir,
+		 *** el bit 7 es 1 y así el OR con este número hará que
+		 *** se de un 1 en el segundo bit del encabezado.
+		 ***/
+		rta |= 64;
 	}
-	return cinco;
+	/*** Se retorna el byte cinco codificado ***/
+	return rta;
 }
 
 /*
@@ -232,11 +265,57 @@ unsigned char codificar(unsigned char cinco)
  */
 void conversionBinario(ARCHIVO *data, ARCHIVO *resultado)
 {
-	//TODO: DESARROLLAR COMPLETAMENTE ESTA FUNCION
+	/*** Variables de los recorridos ***/
 	int i;
-	unsigned char temp;
+	int j;
+
+	/*** Se define el tamaño del nuevo arreglo de chars ***/
+	int tamanho = (int) (ceil((data->tamanho*5)/8)+1);
+
+	/*** Se quita el encabezado de cada byte. Queda así: XXXXX000 ***/
 	for (i = 0; i < data->tamanho; ++i) {
 		data->informacion[i] <<= 3;
+	}
+
+	unsigned char temporal;
+	for (i = 0; i < data->tamanho; ++i) {
+		for (j = i; j < data->tamanho; ++j) {
+			/***
+			 *** Deja en temporal los 3 bits más significativos del
+			 *** byte j+1. Queda así: 00000YYY
+			 ***/
+			temporal = data->informacion[j+1] >> 5;
+			/***
+			 *** Realiza OR con el byte en la posición j y temporal.
+			 *** XXXXX000 V 00000YYY = XXXXXYYY
+			 ***/
+			data->informacion[j] |= temporal;
+
+			/***
+			 *** Se aplica esta condición, pues el byte i en este punto
+			 *** ya se encuentra decodificado, mientras los que le siguen
+			 *** no lo están
+			 ***/
+			if (j > i) {
+				/***
+				 *** Cuando entra en este condicional, el byte sigue sin
+				 *** ser el decodificado. Se entiende el byte debió dar sus
+				 *** 3 bits más significativos al byte que le precede. Por
+				 *** tanto, en este punto se le están quitando los 3 bits más
+				 *** significativos para abrir espacio en los 3 bits menos
+				 *** significativo y así permitir que en la próxima entrada en
+				 *** el bucle, el byte pueda introducir los bits que le faltan.
+				 *** Queda así XXYYY000.
+				 ***/
+				data->informacion[j] <<= 3;
+			}
+		}
+	}
+
+	/*** Se pasa la información codificada al archivo resultado ***/
+	resultado->tamanho = tamanho;
+	for (i = 0; i < tamanho; ++i) {
+		resultado->informacion[i] = data->informacion[i];
 	}
 }
 
