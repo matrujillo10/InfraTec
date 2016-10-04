@@ -46,6 +46,17 @@ int main(int argc, char* argv[])
 	//Se cargan los datos del archivo de entrada en la variable arch de tipo ARCHIVO
 	cargarArchivo(arch, argv[1]);
 
+	// 01101000 01101111 01101100 01100001 => hola
+	// 01101 00001 10111 10110 11000 11000 01000 => Grupos
+	// 01111 => nueva info => o
+	// 01111011 01000011 01111011 01100001 00000000
+
+	meter5bits(arch, 1, 'o');
+	int i;
+	for (i = 0; i < arch->tamanho; ++i) {
+		impresion(arch->informacion[i]);
+	}
+
 	printf("Indique la accion\n\t1) Codificar en ASCII:\n\t2) Decodificar:\n\n");//Se pregunta al usuario cu�l opci�n desea realizar
 
 	scanf("%c", &op);
@@ -59,7 +70,7 @@ int main(int argc, char* argv[])
 		//Se convierte el ARCHIVO arch a texto y se guarda en el ARCHIVO resultado
 		conversionTexto(arch, resultado);
 
-		//Se guarda el archivo de texto en el destino dado como par�metro
+		//Se guarda el archivo de texto en el destino dado como parámetro
 		guardarArchivo(resultado, argv[2]);
 	}
 	else if (op == '2')//Convertir a binario
@@ -72,7 +83,7 @@ int main(int argc, char* argv[])
 		//Se convierte el ARCHIVO arch a binario y se guarda en el ARCHIVO resultado
 		conversionBinario(arch, resultado);
 
-		//Se guarda el archivo de texto en el destino dado como par�metro
+		//Se guarda el archivo de texto en el destino dado como parámetro
 		guardarArchivo(resultado, argv[2]);
 	}
 	else
@@ -141,6 +152,7 @@ void conversionTexto(ARCHIVO *arch, ARCHIVO *resultado)
 		unsigned char temporal;
 		unsigned char temporal2;
 		for (j = 0; j < arch->tamanho; ++j) {
+
 			/***
 			 *** Se desplazan 5 bits a la izquierda para eliminar los que ya
 			 *** fueron procesados y guardados en información y dejar sólo los
@@ -195,9 +207,13 @@ void impresion(unsigned char var) {
  */
 unsigned char sacar5bits(ARCHIVO *arch, int n)
 {
-	// hola = 01101000-01101111-01101100-01100001
-	// Grupos: 01101-00001-10111-10110-11000-11000-01000
-
+	/***
+	 *** Comprueba que n esté entre la cantidad
+	 *** de grupos de 5 bits.
+	 ***/
+	if (n < 1 || n > (int) (ceil((arch->tamanho*8)/5)+1)) {
+		return 0;
+	}
 	/***
 	 *** Forma un arreglo de chars con los grupos separados en diferentes
 	 *** campos y finalmente saca el char de la posición n.
@@ -208,12 +224,12 @@ unsigned char sacar5bits(ARCHIVO *arch, int n)
 	int j;
 
 	/*** Se define el tamaño del nuevo arreglo de chars ***/
-	int tamanho = (int) (ceil((arch->tamanho*8)/5)+1);
+	int tamanho = n;
 
 	/*** Se inicializa del nuevo arreglo de chars ***/
 	unsigned char informacion[tamanho];
 
-	for (i = 0; i < tamanho; ++i) {
+	for (i = 0; i < n; ++i) {
 
 		/***
 		 *** Se iguala el char de la posicion i de info con el char
@@ -265,6 +281,64 @@ unsigned char sacar5bits(ARCHIVO *arch, int n)
 void meter5bits(ARCHIVO *arch, int n, unsigned char bits)
 {
 	//TODO: DESARROLLAR COMPLETAMENTE ESTA FUNCION
+	/*** Variables de los recorridos ***/
+	int i;
+	int j;
+
+	/*** Se define el tamaño del nuevo arreglo de chars ***/
+	int tamanho = (int) (ceil((arch->tamanho*8)/5)+2);
+
+	/*** Se inicializa del nuevo arreglo de chars ***/
+	unsigned char informacion[tamanho];
+	unsigned char data[arch->tamanho];
+	for (i = 0; i < arch->tamanho; ++i) {
+		data[i] = arch->informacion[i];
+	}
+	for (i = 0; i < tamanho-1; ++i) {
+		informacion[i] = data[0];
+		informacion[i] = informacion[i]>>3;
+		unsigned char temporal;
+		unsigned char temporal2;
+		for (j = 0; j < arch->tamanho; ++j) {
+			temporal = data[j] << 5;
+			temporal2 = data[j+1] >> 3;
+			data[j] = temporal | temporal2;
+		}
+	}
+	unsigned char temporal;
+	unsigned char temporal2;
+	for (i = n-1; i < sizeof(informacion)/8; ++i) {
+		if (i == n-1) {
+			temporal = informacion[i];
+			informacion[i] = bits;
+		} else if (i == n) {
+			temporal2 = informacion[i];
+			informacion[i] = temporal;
+		} else {
+			temporal = informacion[i];
+			informacion[i] = temporal2;
+			temporal2 = temporal;
+		}
+	}
+
+	tamanho = (int) (ceil((sizeof(informacion)/8*5)/8)+1);
+	for (i = 0; i < sizeof(informacion)/8; ++i) {
+		informacion[i] <<= 3;
+	}
+	for (i = 0; i < sizeof(informacion)/8; ++i) {
+		for (j = i; j < sizeof(informacion)/8; ++j) {
+			temporal = informacion[j+1] >> 5;
+			informacion[j] |= temporal;
+			if (j > i) {
+				informacion[j] <<= 3;
+			}
+		}
+	}
+
+	arch->tamanho = tamanho;
+	for (i = 0; i < tamanho; ++i) {
+		arch->informacion[i] = informacion[i];
+	}
 }
 
 /*
@@ -272,6 +346,9 @@ void meter5bits(ARCHIVO *arch, int n, unsigned char bits)
  */
 unsigned char codificar(unsigned char cinco)
 {
+	/***
+	 *** Variable que será manipulada y retornada.
+	 ***/
 	unsigned char rta = cinco;
 
 	/***
