@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
 
 	scanf("%c", &op);
 
-	if (op == '1')//Convertir a ASCII
+	if (op == '1') //Convertir a ASCII
 	{
 
 		//Se modifican los atributos del ARCHIVO resultado
@@ -175,22 +175,6 @@ void conversionTexto(ARCHIVO *arch, ARCHIVO *resultado)
 }
 
 /*
- *  Sólo se usa para debugear
- */
-// TODO ¡¡¡¡¡¡BORRAR AL TERMINAR!!!!!!
-void impresion(unsigned char var) {
-	unsigned int contador, inicio = 128;
-	for(contador = inicio; contador > 0; contador >>= 1) {
-		if(contador & var) {
-			printf("1");
-		} else {
-			printf("0");
-		}
-	}
-	printf("\n");
-}
-
-/*
  * Procedimiento que extrae el n-ésimo grupo de 5 bits de la entrada (estructura ARCHIVO apuntada por 'arch') y retorna un char que los contiene en sus 5 bits menos significativos
  * (los restantes bits deben estar en cero)
  */
@@ -269,12 +253,10 @@ unsigned char sacar5bits(ARCHIVO *arch, int n)
  */
 void meter5bits(ARCHIVO *arch, int n, unsigned char bits)
 {
-	//TODO: DESARROLLAR COMPLETAMENTE ESTA FUNCION
-
-
 	/*** Se define el tamaño del nuevo arreglo de chars ***/
 	int tamanho = (int) (ceil((arch->tamanho*8)/5)+2);
 
+	/*** Comprueba que n esté entre los rangos del tamaño de los grupos ***/
 	if (n > 0 && n <= tamanho) {
 
 		/*** Variables de los recorridos ***/
@@ -283,42 +265,119 @@ void meter5bits(ARCHIVO *arch, int n, unsigned char bits)
 
 		/*** Se inicializa del nuevo arreglo de chars ***/
 		unsigned char informacion[tamanho];
+
+		/*** Se pasa la información del archivo al arreglo data ***/
 		unsigned char data[arch->tamanho];
 		for (i = 0; i < arch->tamanho+1; ++i) {
 			data[i] = arch->informacion[i];
 		}
+
 		for (i = 0; i < tamanho-1; ++i) {
+
+			/***
+			 *** Se iguala el char de la posicion i de info con el char
+			 *** en la primera posición de la información del archivo
+			 ***/
 			informacion[i] = data[0];
+
+			/***
+			 *** Se hace el corrimiento de 3 birs a la derecha para poder
+			 *** introducir el encabezado
+			 ***/
 			informacion[i] >>= 3;
+
 			unsigned char temporal;
 			unsigned char temporal2;
 			for (j = 0; j < arch->tamanho; ++j) {
+
+				/***
+				 *** Se desplazan 5 bits a la izquierda para eliminar los que ya
+				 *** fueron procesados y guardados en información y dejar sólo los
+				 *** pertenecientes al siguiente grupo de 5 que se almacenan en ese byte
+				 ***/
 				temporal = data[j] << 5;
+
+				/***
+				 *** Se desplazan 3 bits a la derecha en el byte en la posición j+1
+				 *** para dar el espacio de los 3 bits que estaban en el byte anterior y
+				 *** 2 bits del byte que sigue al presente.
+				 ***/
 				temporal2 = data[j+1] >> 3;
+
+				/***
+				 *** Se realiza el temporal or temporal2 y se almacena en el byte de la
+				 *** posición j. Cabe resaltar que siempre se mueve el siguiente byte a
+				 *** leer a la primera posición del arreglo de información del archivo
+				 *** y se van completando los demás con 0. Así, si se tiene la necesidad
+				 *** de usar bits de relleno, irán implicitos como si pertenecieran a la
+				 *** información.
+				 ***/
 				data[j] = temporal | temporal2;
 			}
 		}
+
+		/***
+		 *** Se agrega el nuevo bit de información en el espacio
+		 *** vacío del final del arreglo.
+		 ***/
 		informacion[tamanho-1] = bits;
+
 		unsigned char temporal;
+
+		/***
+		 *** Se intercambian las posiciones del bit por agregar hasta
+		 *** llegar a la posicion n. Es decir, donde debe estar.
+		 ***/
 		for (i = tamanho-1; i > n-1; --i) {
 			temporal = informacion[i];
 			informacion[i] = informacion[i-1];
 			informacion[i-1] = temporal;
 		}
+
+		/*** Se guarda el tamaño del arreglo ***/
 		int size = tamanho;
+
+		/*** Se modifica el tamaño, que será el tamaño en bytes del archivo ***/
 		tamanho = (int) ceil((size*5)/8);
+
+		/*** Se quita el encabezado de cada byte. Queda así: XXXXX000 ***/
 		for (i = 0; i < size; ++i) {
 			informacion[i] <<= 3;
 		}
+
 		for (i = 0; i < size; ++i) {
 			for (j = i; j < size; ++j) {
+
+				/***
+				 *** Deja en temporal los 3 bits más significativos del
+				 *** byte j+1. Queda así: 00000YYY
+				 ***/
 				temporal = informacion[j+1] >> 5;
+
+				/***
+				 *** Realiza OR con el byte en la posición j y temporal.
+				 *** XXXXX000 V 00000YYY = XXXXXYYY
+				 ***/
 				informacion[j] |= temporal;
+
 				if (j > i) {
+
+					/***
+					 *** Cuando entra en este condicional, el byte sigue sin
+					 *** ser el decodificado. Se entiende el byte debió dar sus
+					 *** 3 bits más significativos al byte que le precede. Por
+					 *** tanto, en este punto se le están quitando los 3 bits más
+					 *** significativos para abrir espacio en los 3 bits menos
+					 *** significativo y así permitir que en la próxima entrada en
+					 *** el bucle, el byte pueda introducir los bits que le faltan.
+					 *** Queda así XXYYY000.
+					 ***/
 					informacion[j] <<= 3;
 				}
 			}
 		}
+
+		/*** Se pasa la nueva información al archivo ***/
 		arch->tamanho = tamanho;
 		for (i = 0; i < tamanho; ++i) {
 			arch->informacion[i] = informacion[i];
