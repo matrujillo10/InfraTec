@@ -46,17 +46,6 @@ int main(int argc, char* argv[])
 	//Se cargan los datos del archivo de entrada en la variable arch de tipo ARCHIVO
 	cargarArchivo(arch, argv[1]);
 
-	// 01101000 01101111 01101100 01100001 => hola
-	// 01101 00001 10111 10110 11000 11000 01000 => Grupos
-	// 01111 => nueva info => o
-	// 01111011 01000011 01111011 01100001 00000000
-
-	meter5bits(arch, 1, 'o');
-	int i;
-	for (i = 0; i < arch->tamanho; ++i) {
-		impresion(arch->informacion[i]);
-	}
-
 	printf("Indique la accion\n\t1) Codificar en ASCII:\n\t2) Decodificar:\n\n");//Se pregunta al usuario cu�l opci�n desea realizar
 
 	scanf("%c", &op);
@@ -123,7 +112,7 @@ void conversionTexto(ARCHIVO *arch, ARCHIVO *resultado)
 		 *** Se hace el corrimiento de 3 birs a la derecha para poder
 		 *** introducir el encabezado
 		 ***/
-		informacion[i] = informacion[i]>>3;
+		informacion[i] >>= 3;
 
 		/***
 		 *** En esta parte se determina si el bit más significativo del grupo
@@ -281,63 +270,59 @@ unsigned char sacar5bits(ARCHIVO *arch, int n)
 void meter5bits(ARCHIVO *arch, int n, unsigned char bits)
 {
 	//TODO: DESARROLLAR COMPLETAMENTE ESTA FUNCION
-	/*** Variables de los recorridos ***/
-	int i;
-	int j;
+
 
 	/*** Se define el tamaño del nuevo arreglo de chars ***/
 	int tamanho = (int) (ceil((arch->tamanho*8)/5)+2);
 
-	/*** Se inicializa del nuevo arreglo de chars ***/
-	unsigned char informacion[tamanho];
-	unsigned char data[arch->tamanho];
-	for (i = 0; i < arch->tamanho; ++i) {
-		data[i] = arch->informacion[i];
-	}
-	for (i = 0; i < tamanho-1; ++i) {
-		informacion[i] = data[0];
-		informacion[i] = informacion[i]>>3;
-		unsigned char temporal;
-		unsigned char temporal2;
-		for (j = 0; j < arch->tamanho; ++j) {
-			temporal = data[j] << 5;
-			temporal2 = data[j+1] >> 3;
-			data[j] = temporal | temporal2;
-		}
-	}
-	unsigned char temporal;
-	unsigned char temporal2;
-	for (i = n-1; i < sizeof(informacion)/8; ++i) {
-		if (i == n-1) {
-			temporal = informacion[i];
-			informacion[i] = bits;
-		} else if (i == n) {
-			temporal2 = informacion[i];
-			informacion[i] = temporal;
-		} else {
-			temporal = informacion[i];
-			informacion[i] = temporal2;
-			temporal2 = temporal;
-		}
-	}
+	if (n > 0 && n <= tamanho) {
 
-	tamanho = (int) (ceil((sizeof(informacion)/8*5)/8)+1);
-	for (i = 0; i < sizeof(informacion)/8; ++i) {
-		informacion[i] <<= 3;
-	}
-	for (i = 0; i < sizeof(informacion)/8; ++i) {
-		for (j = i; j < sizeof(informacion)/8; ++j) {
-			temporal = informacion[j+1] >> 5;
-			informacion[j] |= temporal;
-			if (j > i) {
-				informacion[j] <<= 3;
+		/*** Variables de los recorridos ***/
+		int i;
+		int j;
+
+		/*** Se inicializa del nuevo arreglo de chars ***/
+		unsigned char informacion[tamanho];
+		unsigned char data[arch->tamanho];
+		for (i = 0; i < arch->tamanho+1; ++i) {
+			data[i] = arch->informacion[i];
+		}
+		for (i = 0; i < tamanho-1; ++i) {
+			informacion[i] = data[0];
+			informacion[i] >>= 3;
+			unsigned char temporal;
+			unsigned char temporal2;
+			for (j = 0; j < arch->tamanho; ++j) {
+				temporal = data[j] << 5;
+				temporal2 = data[j+1] >> 3;
+				data[j] = temporal | temporal2;
 			}
 		}
-	}
-
-	arch->tamanho = tamanho;
-	for (i = 0; i < tamanho; ++i) {
-		arch->informacion[i] = informacion[i];
+		informacion[tamanho-1] = bits;
+		unsigned char temporal;
+		for (i = tamanho-1; i > n-1; --i) {
+			temporal = informacion[i];
+			informacion[i] = informacion[i-1];
+			informacion[i-1] = temporal;
+		}
+		int size = tamanho;
+		tamanho = (int) ceil((size*5)/8);
+		for (i = 0; i < size; ++i) {
+			informacion[i] <<= 3;
+		}
+		for (i = 0; i < size; ++i) {
+			for (j = i; j < size; ++j) {
+				temporal = informacion[j+1] >> 5;
+				informacion[j] |= temporal;
+				if (j > i) {
+					informacion[j] <<= 3;
+				}
+			}
+		}
+		arch->tamanho = tamanho;
+		for (i = 0; i < tamanho; ++i) {
+			arch->informacion[i] = informacion[i];
+		}
 	}
 }
 
@@ -405,7 +390,7 @@ void conversionBinario(ARCHIVO *data, ARCHIVO *resultado)
 	int j;
 
 	/*** Se define el tamaño del nuevo arreglo de chars ***/
-	int tamanho = (int) (ceil((data->tamanho*5)/8)+1);
+	int tamanho = (int) ceil((data->tamanho*5)/8);
 
 	/*** Se quita el encabezado de cada byte. Queda así: XXXXX000 ***/
 	for (i = 0; i < data->tamanho; ++i) {
