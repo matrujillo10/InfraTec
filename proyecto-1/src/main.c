@@ -4,7 +4,7 @@ PROYECTO 1 FUNDAMENTOS DE INFRAESTRUCTURA TECNOLÓGICA
 #define _CRT_SECURE_NO_DEPRECATE
 #include "stdlib.h"
 #include "stdio.h"
-#include <math.h>
+#include "math.h"
 
 /**
  * Miller Andrés Trujillo - 201517402
@@ -24,7 +24,6 @@ void conversionBinario(ARCHIVO *data, ARCHIVO *resultado);
 unsigned char codificar(unsigned char cinco);
 unsigned char sacar5bits(ARCHIVO *arch, int n);
 void meter5bits(ARCHIVO *arch, int n, unsigned char bits);
-void impresion(unsigned char var);
 
 int main(int argc, char* argv[])
 {
@@ -33,6 +32,7 @@ int main(int argc, char* argv[])
 	ARCHIVO *resultado = (ARCHIVO *)malloc(sizeof (ARCHIVO));//Archivo de salida
 
 	char op;
+
 	if (argc != 3)
 	{
 		printf("Faltan argumentos - Debe haber dos archivos: entrada y salida\n");
@@ -281,8 +281,8 @@ void meter5bits(ARCHIVO *arch, int n, unsigned char bits)
 			informacion[i] = data[0];
 
 			/***
-			 *** Se hace el corrimiento de 3 birs a la derecha para poder
-			 *** introducir el encabezado
+			 *** Se hace el corrimiento de 3 bits a la derecha para poder
+			 *** dejar el encabezado
 			 ***/
 			informacion[i] >>= 3;
 
@@ -294,6 +294,7 @@ void meter5bits(ARCHIVO *arch, int n, unsigned char bits)
 				 *** Se desplazan 5 bits a la izquierda para eliminar los que ya
 				 *** fueron procesados y guardados en información y dejar sólo los
 				 *** pertenecientes al siguiente grupo de 5 que se almacenan en ese byte
+				 *** Dejando: XXX00000
 				 ***/
 				temporal = data[j] << 5;
 
@@ -301,16 +302,18 @@ void meter5bits(ARCHIVO *arch, int n, unsigned char bits)
 				 *** Se desplazan 3 bits a la derecha en el byte en la posición j+1
 				 *** para dar el espacio de los 3 bits que estaban en el byte anterior y
 				 *** 2 bits del byte que sigue al presente.
+				 *** Dejando: 000YYYYY
 				 ***/
 				temporal2 = data[j+1] >> 3;
 
 				/***
-				 *** Se realiza el temporal or temporal2 y se almacena en el byte de la
+				 *** Se realiza el temporal OR temporal2 y se almacena en el byte de la
 				 *** posición j. Cabe resaltar que siempre se mueve el siguiente byte a
 				 *** leer a la primera posición del arreglo de información del archivo
 				 *** y se van completando los demás con 0. Así, si se tiene la necesidad
 				 *** de usar bits de relleno, irán implicitos como si pertenecieran a la
 				 *** información.
+				 *** Dejando: XXXYYYYY
 				 ***/
 				data[j] = temporal | temporal2;
 			}
@@ -337,7 +340,7 @@ void meter5bits(ARCHIVO *arch, int n, unsigned char bits)
 		/*** Se guarda el tamaño del arreglo ***/
 		int size = tamanho;
 
-		/*** Se modifica el tamaño, que será el tamaño en bytes del archivo ***/
+		/*** Se modifica el tamaño, que será el nuevo tamaño en bytes del archivo ***/
 		tamanho = (int) ceil((size*5)/8);
 
 		/*** Se quita el encabezado de cada byte. Queda así: XXXXX000 ***/
