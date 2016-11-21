@@ -87,13 +87,42 @@ int main(int argc, char* argv[])
     return 0;
 }
 
-/*
- *Procedimiento que convierte el argumento de entrada a la opci�n adecuada para saber si convertir a ASCII o a binario
+/**
+ * Procedimiento que convierte el argumento de entrada a la opción adecuada para saber si convertir a ASCII o a binario
  */
-//TODO: DESARROLLAR COMPLETAMENTE ESTA FUNCION. SE PERMITE USAR NOMBRES SIMBOLICOS
-int convertir ( char * p )
-{
-    
+int convertir (char * p) {
+    __asm {
+        .code
+            convertir proc
+                push ebp
+                mov ebp, esp
+                mov ecx, [ebp+8]                ; ecx guarda el parametro
+                mov ebx, 45                     ; ebx se igual al valor númerico del caracter ascii '-'
+                cmp ebx, ecx                    ; se compara con el valor almacenado en ecx
+                jne notEquals
+                    mov esi, 0
+                    jmp end
+                notEquals:
+                mov ebx, 97
+                add ecx, 1
+                cmp ebx, ecx
+                jne notEqualsA
+                    mov esi, 1
+                    jmp end
+                notEqualsA:
+                mov ebx, 98
+                cmp ebx, ecx
+                jne notEqualsB
+                    mov esi, 2
+                    jmp end
+                notEqualsB:
+                mov esi, 0
+                end:
+                mov eax, esi
+                pop ebp
+                ret 4
+            convertir endp
+    }
 }
 
 /*
@@ -101,9 +130,46 @@ int convertir ( char * p )
 * y lo guarda en la estructura ARCHIVO apuntada por 'resultado'.
 */
 //TODO: DESARROLLAR COMPLETAMENTE ESTA FUNCION. SE PERMITE USAR NOMBRES SIMBOLICOS
-void conversionTexto(ARCHIVO *arch, ARCHIVO *resultado)
-{
-
+void conversionTexto(ARCHIVO *arch, ARCHIVO *resultado) {
+    __asm {
+        ; Se usan los registros ebx, ecx, esi y edi. El registro eax se usa para guardar los valores retornados por los métodos.
+        .code
+            conversionTexto proc
+                push ebp
+                mov ebp, esp
+                mov ebx, [ebp+8]                ; ebx guarda el inicio de la estructura arch. Es decir, el tamaño.
+                mov edx, [ebp+12]               ; edx guarda el inicio de la estructura resultado. Es decir, el tamaño.
+                mov ecx, [edx+4]
+                mov esi, 0
+                Bwhile:	cmp esi, [edx]
+                jge Ewhile                      ; i < resultado->tamanho
+                    
+                    push ebx                    ;----------------------------------------------------------------------
+                    push edx                    ;
+                    push ecx                    ; Salvando los registros
+                    push esi                    ;----------------------------------------------------------------------
+                        
+                    push esi                    ; Parametros  sacar5bits
+                    push [ebx]                  ; Parametros  sacar5bits
+                    call sacar5bits             ; eax se usa para traer el valor retornado
+                    push eax                    ; Parametros codificar
+                        
+                    call codificar              ; eax se usa para traer el valor retornado
+                        
+                    pop esi                     ;----------------------------------------------------------------------
+                    pop ecx                     ;
+                    pop edx                     ; Recuperando los registros
+                    pop ebx                     ;----------------------------------------------------------------------
+                
+                    mov [edx+4], eax
+                    inc esi
+                jmp Bwhile
+                Ewhile:
+                pop ebp
+                ret 8
+            conversionTexto endp
+    }
+    resultado->informacion[i] = codificar(sacar5bits(arch, i));
 }
 
 /*
@@ -200,5 +266,3 @@ void guardarArchivo(ARCHIVO *data, char *nomArchivoSalida)
 		printf("Error cerrando el archivo");
 	}
 }
-
-
