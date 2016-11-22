@@ -1,0 +1,60 @@
+﻿Compilación iniciada a las 22/11/2016 01:55:30 p.m..
+     1>Proyecto "\\CODD.sis.virtual.uniandes.edu.co\Estudiantes\Profiles\ja.bermudez10\Desktop\Test\Test\Test.vcxproj" en el nodo 2 (build destinos).
+     1>InitializeBuildStatus:
+         Aplicando tarea Touch a "Debug\Test.unsuccessfulbuild".
+       ClCompile:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /ZI /nologo /W3 /WX- /Od /Oy- /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /Gd /TC /analyze- /errorReport:prompt "..\..\InfraTec-master\proyecto-2\src\main.c" Codigo.c
+         Codigo.c
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(54): error C2143: error de sintaxis : falta ';' delante de 'tipo'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(56): error C2065: 'op' : identificador no declarado
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(68): error C2065: 'op' : identificador no declarado
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(95): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'proc'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(122): error C2400: error de sintaxis de código ensamblador en línea en 'primer operando'; se encontró 'newline'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(123): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'endp'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(134): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'code'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(135): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'proc'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(170): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'endp'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(180): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'data'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(181): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'DD'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(182): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'DD'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(184): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'code'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(185): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'proc'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(191): error C2415: tipo de operando incorrecto
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(192): error C2415: tipo de operando incorrecto
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(195): error C2415: tipo de operando incorrecto
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(196): error C2415: tipo de operando incorrecto
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(206): error C2415: tipo de operando incorrecto
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(220): error C2415: tipo de operando incorrecto
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(229): error C2415: tipo de operando incorrecto
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(237): error C2415: tipo de operando incorrecto
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(242): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'endp'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(252): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'DD'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(253): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'DD'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(254): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'DD'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(255): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'DB'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(256): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'DB'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(258): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'proc'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(264): error C2415: tipo de operando incorrecto
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(265): error C2415: tipo de operando incorrecto
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(268): error C2415: tipo de operando incorrecto
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(269): error C2415: tipo de operando incorrecto
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(271): error C2443: conflicto de tamaño de operando
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(276): error C2415: tipo de operando incorrecto
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(277): error C2443: conflicto de tamaño de operando
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(280): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'endp'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(290): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'code'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(291): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'proc'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(306): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'endp'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(317): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'code'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(318): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'proc'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\test\test\codigo.c(346): error C2400: error de sintaxis de código ensamblador en línea en 'opcode'; se encontró 'endp'
+         main.c
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\infratec-master\proyecto-2\src\main.c(54): error C2143: error de sintaxis : falta ';' delante de 'tipo'
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\infratec-master\proyecto-2\src\main.c(56): error C2065: 'op' : identificador no declarado
+     1>\\codd.sis.virtual.uniandes.edu.co\estudiantes\profiles\ja.bermudez10\desktop\infratec-master\proyecto-2\src\main.c(68): error C2065: 'op' : identificador no declarado
+         Generando código...
+     1>Compilación del proyecto terminada "\\CODD.sis.virtual.uniandes.edu.co\Estudiantes\Profiles\ja.bermudez10\Desktop\Test\Test\Test.vcxproj" (build destinos) -- ERROR.
+
+ERROR al compilar.
+
+Tiempo transcurrido 00:00:00.21
