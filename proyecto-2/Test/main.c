@@ -93,6 +93,7 @@ int main(int argc, char* argv[]) {
 int convertir (char * p) {
 	int ans;
     __asm {
+		; Registros usados: EBX, ESI
 		mov ebx, p[0]				; Guarda en ebx la posicion del primer caracter del apuntador p
 		cmp[ebx], ['-']				; Compara el primer caracter que hay en p, con el caracter 45 ('-') de la tabla ascii
         je Equals					; Si son diferentes, no es el formato esperado. Por tanto, se devolverá 0
@@ -122,6 +123,7 @@ int convertir (char * p) {
  */
 void conversionTexto(ARCHIVO *arch, ARCHIVO *resultado) {
     __asm {
+		; Registros usados: EAX (AL), EBX, ECX, EDX, ESI
 		mov ebx, arch					; Se mueve a ebx el apuntador del archivo arch
 		mov edx, resultado				; Se mueve a edx el apuntador del archivo resultado
         mov esi, 0						; Se inicializa el contador en esi y en 0
@@ -155,56 +157,55 @@ void conversionTexto(ARCHIVO *arch, ARCHIVO *resultado) {
 unsigned char sacar5bits(ARCHIVO *arch, int n) {
 	int numL, numB;
     __asm {
-        mov edi, arch
-        mov ecx, n
-        mov eax, n
-		mov ebx, 8
-        imul eax, 5
-		mov edx, 0
-        idiv ebx
-        mov numL, eax
-        mov numB, edx
-
-		mov eax, 0
-		mov ebx, 0
-		mov ecx, 0
-		mov edx, 0
-		
-        mov edx, [edi+4]
-        add edx, numL
-        mov al, [edx]				; letra
-        cmp numB, 4
-        jge Else1
-			mov ecx, 0
-            mov cl, 3
-            sub ecx, numB
-			shr al, cl
-            and al, 0x1F ;31
-            jmp fin
-        Else1:
-			mov ebx, [edi]
-            dec ebx
-            cmp ebx, numL
-            jne Else2
-				mov ecx, 0
-				mov cl, -3
-				add ecx, numB
-				shl al, cl
-				and al, 0x1F ;31
-                jmp fin
-            Else2:
-					mov ecx, 0
-					mov cl, -3
-					add ecx, numB
-					shl al, cl
-					and al, 0x1F ;31
-					mov ebx, 0
-                    mov bl, [edx+1]
-					mov ecx, 0
-                    mov cl, 11
-                    sub ecx, numB
-					shr bl, cl
-                    or al, bl
+		; Registros usados: EAX (AL), EBX (BL), ECX (CL), EDX, EDI
+        mov edi, arch				; Se mueve al registro edi el apuntador del archivo arch
+        mov ecx, n					; Se mueve al registro ecx el valor de n
+        mov eax, n					; Se mueve al registro eax el valor de n
+		mov ebx, 8					; Se mueve al registro ebx el valor 8
+        imul eax, 5					; Se multiplica el valor de eax (n) por 5. (n*5)
+		mov edx, 0					; Se vacia el registro edx
+        idiv ebx					; Se divide el valor de eax (n*5) en el valor de edx (8). eax = (n*5)/8, edx = (n * 5)%8
+        mov numL, eax				; Se mueve a la variable numL el valor de eax ((n * 5) / 8)
+        mov numB, edx				; Se nueve a la variable numB el valor de edx ((n * 5) % 8)
+		mov eax, 0					;-----------------------------------------------------------------------------------------
+		mov ebx, 0					;
+		mov ecx, 0					; Se vacian los registros
+		mov edx, 0					;-----------------------------------------------------------------------------------------
+        mov edx, [edi+4]			; Se mueve al registro edx el apuntador de la información del archivo arch
+        add edx, numL				; Se le añade el valor de numL al apuntador de la información del archivo arch
+        mov al, [edx]				; Se guarda en el registro al el byte en la posición numL de la información del archivo arch
+        cmp numB, 4					; Se compara numB con 4
+        jge Else1					; numB < 4
+			mov ecx, 0				; Se vacia el registro ecx
+            mov cl, 3				; Se mueve el valor 3 al registro cl
+            sub ecx, numB			; Se resta el valor de numB al valor almacenado en ecx (3)
+			shr al, cl				; Se corren a la derecha (3-numB) bits del registro al
+            and al, 0x1F			; Se hace una operación and bit a bit sobre el registro al, (al and 31). ((XXXXXXX)_2 and (00011111)_2) = (000XXXXX)_2
+            jmp fin					; Se salta hasta el final del programa
+        Else1:						; numB >= 4
+			mov ebx, [edi]			; Se mueve al registro ebx el valor apuntado por edi. Es decir, el tamaño del archivo arch
+            dec ebx					; Se disminuye en uno el valor de ebx. (arch->tamanho-1)
+            cmp ebx, numL			; Se compara ebx con numL
+            jne Else2				; ebx == numL, o bien, numL == arch->tamanho - 1
+				mov ecx, 0			; Se vacia el registro ecx
+				mov cl, -3			; Se mueve el valor -3 al registro cl
+				add ecx, numB		; Se suma el valor de numB al valor almacebadi eb ecx (-3)
+				shl al, cl			; Se corren a la izquierda (numB-3) bits del registro al
+				and al, 0x1F		; Se hace una operación and bit a bit sobre el registro al, (al and 31). ((XXXXXXX)_2 and (00011111)_2) = (000XXXXX)_2
+                jmp fin				; Se salta hasta el final del programa
+            Else2:					; ebx != numL, o bien, numL != arch->tamanho - 1
+				mov ecx, 0			; Se vacia el registro ecx
+				mov cl, -3			; Se mueve el valor - 3 al registro cl
+				add ecx, numB		; Se suma el valor de numB al valor almacebadi eb ecx(-3)
+				shl al, cl			; Se corren a la izquierda(numB - 3) bits del registro al
+				and al, 0x1F		; Se hace una operación and bit a bit sobre el registro al, (al and 31). ((XXXXXXX)_2 and (00011111)_2) = (000XXXXX)_2
+				mov ebx, 0			; Se vacia el registro ebx
+                mov bl, [edx+1]		; Se guarda en el registro bl el byte en la posición (numL+1) de la información del archivo arch
+				mov ecx, 0			; Se vacia el registro ecx
+                mov cl, 11			; Se mueve el valor 11 al registro cl
+                sub ecx, numB		; Se resta el valor de numB al valor almacenado en ecx (11)
+				shr bl, cl			; Se corren a la derecha (11-numB) bits del registro al
+                or al, bl			; Se hace una operación or bit a bit sobre el registro al con el registro bl, (al or bl). ((XXXXXXX)_2 or (XXXXXXX)_2) = (XXXXXXX)_2
 			fin:
     }
 }
@@ -300,11 +301,12 @@ void meter5bits(ARCHIVO *arch, int n, unsigned char bits) {
 */
 unsigned char codificar(unsigned char cinco) {
     __asm {
+		; Registros usados: EAX (AL), EBX (BL)
 		mov ebx, 0						; Se vacia el registro ebx
 		mov eax, 0						; Se vacia el registro eax
         mov bl, cinco					; Se usa el registro bl para guardar el parametro cinco
         cmp ebx, 0						; Se compara ebx con 0
-        jl Else							; ebx >= 0
+		jl Else							; ebx >= 0
             cmp ebx, 0x0f				; Se compara ebx con 15
             jg Else						; ebx <= 15
                 mov al, 0x40			; Se mueve al registro al el valor 64, al = (01000000)_2
@@ -323,6 +325,7 @@ unsigned char codificar(unsigned char cinco) {
 */
 void conversionBinario(ARCHIVO *data, ARCHIVO *resultado) {
     __asm {
+		; Registros usados:	EBX, ECX, EDX, EDI, ESI
         mov ebx, data					; Se mueve a ebx el apuntador del archivo data
         mov ecx, resultado				; Se mueve a ebx el apuntador del archivo resultado
 		mov edi, [ebx+4]				; Se mueve a ecx el apuntador a la información del archivo data
