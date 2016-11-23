@@ -216,84 +216,63 @@ unsigned char sacar5bits(ARCHIVO *arch, int n) {
 //TODO: DESARROLLAR COMPLETAMENTE ESTA FUNCION. NO SE PERMITE USAR NOMBRES SIMBOLICOS
 void meter5bits(ARCHIVO *arch, int n, unsigned char bits) {
 	__asm {
-		push ebp
-		mov ebp, esp
-		/* mov ebx, [ebp + 8]				;se mueve *arch a ebx
-		mov eax, [ebp + 12]				;se mueve n a eax
-		mov ecx, [ebp + 16]				;se mueve bits a cl */
-		mov eax, [ebp + 12]
-		mov ebx, 5
-		mul ebx
-		mov ebx, 8
-		div ebx							;eax = numL ;edx = numB
-		push eax						;numL
-		push edx						;numB
-		/*mov numL, eax					;numL = N*5/8
-		mov numB, edx					;numB = (N*5)%8*/
-		mov edi, [ebp + 8]				;edi = arch
-		add eax, 4
-		mov esi, [edi + eax]			;informacion + numL
-		mov dl, [esi]					;*pnt = arch->informacion + numL
-		push edx
-		mov dh, dl						;letra = *pnt
-		mov ebx, [ebp + 16]				;bits (4 bytes)
-		and bl, 1FH						;bits = 0x1f & bits
-		mov bh, bl						;tmp = bits
-		mov ecx, [ebp - 8]				;numB
-		cmp ecx, 4						;numB < 4?
-        jge PrimerElse
-            neg ecx							; - numB
-            add ecx, 3						;3 + (- numB) = 3 - numB
-            loop correr						;--------------------------------
-            jmp BreakCorrer
-            correr:							; bits << (3 - numB)	
-                shl bl, 1
-            BreakCorrer:					;--------------------------------
-                or dh, bl					;letra|(bits << (3 - numB)
-                mov dl, dh
+        push ebp
+        mov ebp, esp
+        mov ebx, [ebp+8]            ; arch
+        mov eax, [ebp+12]           ; n
+        mov ecx, [ebp+16]           ; bits
+        mov edi, [eax+8]            ; arch->informacion
+		mov esi, 8					; Se mueve al registro ebx el valor 8
+        imul eax, 5					; Se multiplica el valor de eax (n) por 5. (n*5)
+		mov edx, 0					; Se vacia el registro edx
+        idiv esi					; Se divide el valor de eax (n*5) en el valor de edx (8). eax = (n*5)/8, edx = (n * 5)%8
+        push eax                    ; numL [ebp-4]
+        push ebx                    ; numB [ebp-8]
+        mov eax, [ebp-4]
+        mov edx, [edi+eax]          ; pnt
+        mov eax, [edx]              ; letra
+        and ecx, 0x1f
+        push ecx                    ; tmp [ebp-12]
+        mov esi, [ebp-8]
+        cmp esi, 4
+        jge Else1
+            mov esi, ecx
+            mov ecx, 0
+            mov cl, 3
+            sub ecx, [ebp-8]
+            shl esi, cl
+            or eax, esi
+            mov [edx], eax
             jmp fin
-            /*and cl, 1FH						
-            movsx tmp, cl
-            cmp edx, 4
-            mov eax, 3
-            sub eax, numB
-            sal cl, eax
-            or letra, cl*/
-		PrimerElse:
-			mov eax, [ebp - 4]			;numL
-			mov esi, [ebp + 8]			;pnt
-			mov esi, [esi]				;tamanho
-			dec esi						;tamanho - 1
-			cmp eax, esi				;numL == (tamanho - 1)?
-				jne ElseDentroDeElse
-                    mov ecx, [ebp - 8]
-                    sub ecx, 3
-                    shr bl, cl					;bits >> (numB-3)
-                    or dh, bl					;letra|(bits>>(numB-3))
-                    mov dl, dh
-                    jmp fin
-				ElseDentroDeElse:
-					mov ecx, [ebp - 8]
-					sub ecx, 3
-						shr bh, cl					;tmp >> (numB-3)
-						or dh, bh					;letra|(tmp>>(numB-3))
-						mov dl, dh					;No dude
-						mov eax, [ebp - 12]
-						inc eax
-						mov eax, [eax]
-						mov ecx, [ebp - 8]
-						neg ecx
-						add ecx, 11
-						shl bl, cl
-						or al, bl
-						mov esi,eax
-		fin:
-			pop edx
-			pop edx
-			pop eax
-			pop ebp
-			mov eax, esi
-	}
+        Else1:
+            mov esi, [ebx]			; Se mueve al registro esi el valor apuntado por ebx. Es decir, el tamaño del archivo arch
+            dec esi					; Se disminuye en uno el valor de esi. (arch->tamanho-1)
+            cmp esi, [ebp-4]		; Se compara ebx con numL
+            jne Else2               ; esi == numL, o bien, numL == arch->tamanho - 1
+                mov esi, ecx
+                mov ecx, 0
+                mov ecx, [ebp-8]
+                sub ecx, 3
+                shr esi, cl
+                or eax, esi
+                mov [edx], eax
+                jmp fin
+            Else2:
+                mov esi, [ebp-12]
+                mov edi, ecx
+                mov ecx, 0
+                mov ecx, [ebp-8]
+                sub ecx, 3
+                shr esi, cl
+                or eax, esi
+                mov [edx], eax
+                mov ecx, 0
+                mov cl, 11
+                sub ecx, [ebp-8]
+                shl edi, cl
+                or [edx+1], edi
+        fin:
+        pop eax ebx ecx ebp
 }
 
 /*
