@@ -221,7 +221,7 @@ void meter5bits(ARCHIVO *arch, int n, unsigned char bits) {
         mov ebx, [ebp+8]            ; arch
         mov eax, [ebp+12]           ; n
         mov ecx, [ebp+16]           ; bits
-        mov edi, [eax+8]            ; arch->informacion
+        mov edi, [ebx+4]            ; arch->informacion
 		mov esi, 8					; Se mueve al registro ebx el valor 8
         imul eax, 5					; Se multiplica el valor de eax (n) por 5. (n*5)
 		mov edx, 0					; Se vacia el registro edx
