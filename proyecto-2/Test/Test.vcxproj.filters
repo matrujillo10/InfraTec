@@ -15,10 +15,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Codigo.c">
-      <Filter>Archivos de código fuente</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\InfraTec-master\proyecto-2\src\main.c">
+    <ClCompile Include="main.c">
       <Filter>Archivos de código fuente</Filter>
     </ClCompile>
   </ItemGroup>

@@ -2,7 +2,7 @@
 PROYECTO 1 FUNDAMENTOS DE INFRAESTRUCTURA TECNOL�GICA
 */
 #define _CRT_SECURE_NO_DEPRECATE
-#include "stdlib.h" 
+#include "stdlib.h"
 #include "stdio.h"
 
 /**
@@ -93,25 +93,25 @@ int main(int argc, char* argv[]) {
 int convertir (char * p) {
 	int ans;
     __asm {
-        mov ebx, p[0]
-        cmp [ebx], ['-']
-        je Equals
-            mov esi, 0
-            jmp end
+		mov ebx, p[0]				; Guarda en ebx la posicion del primer caracter del apuntador p
+		cmp[ebx], ['-']				; Compara el primer caracter que hay en p, con el caracter 45 ('-') de la tabla ascii
+        je Equals					; Si son diferentes, no es el formato esperado. Por tanto, se devolverá 0
+            mov esi, 0				; Se mueve a esi el valor 0
+            jmp end					; Se salta hasta el final del programa
 		Equals:
-        cmp [ebx+1], ['a']
-        jne notEqualsA
-            mov esi, 1
-            jmp end
+        cmp [ebx+1], ['a']			; Compara el segundo caracter que hay en p, con el caracter 97 ('a') de la tabla ascii
+        jne notEqualsA				; Si son iguales, ya se conoce la instrucción
+            mov esi, 1				; Se mueve a esi el valor 1 para indicar que se convertira a ascii
+            jmp end					; Se salta hasta el final del programa
         notEqualsA:
-        cmp [ebx+1], ['b']
-        jne notEqualsB
-            mov esi, 2
-            jmp end
+        cmp [ebx+1], ['b']			; Compara el segundo caracter que hay en p, con el caracter 97 ('a') de la tabla ascii
+        jne notEqualsB				; Si son iguales, ya se conoce la instrucción
+            mov esi, 2				; Se mueve a esi el valor 2 para indicar que se convertira a binario
+            jmp end					; Se salta hasta el final del programa
         notEqualsB:
-        mov esi, 0
+        mov esi, 0					; Si el programa llegó acá, significa que no se tenía el formato esperado. Por tanto, se devolverá 0
         end:
-        mov ans, esi
+        mov ans, esi				; Se mueve el valor de esi a ans que es la variable que será retornada en el código de c
     }
 	return ans;
 }
@@ -122,38 +122,27 @@ int convertir (char * p) {
  */
 void conversionTexto(ARCHIVO *arch, ARCHIVO *resultado) {
     __asm {
-		mov ebx, arch
-		mov edx, resultado
-        mov esi, 0
-		mov ecx, [edx+4]
-        Bwhile:	cmp esi, [edx]
-        jge Ewhile                      ; i < resultado->tamanho
-
-            push ebx                    ;----------------------------------------------------------------------
-            push edx                    ; Salvando los registros
-            push esi                    ;----------------------------------------------------------------------
-			push ecx
-
-            push esi                    ; Parametros  sacar5bits - i
+		mov ebx, arch					; Se mueve a ebx el apuntador del archivo arch
+		mov edx, resultado				; Se mueve a edx el apuntador del archivo resultado
+        mov esi, 0						; Se inicializa el contador en esi y en 0
+		mov ecx, [edx+4]				; Se mueve a ecx el apuntador a la información del archivo resultado
+        Bwhile:	cmp esi, [edx]			; Se compara el tamaño del archivo resultado con el contador
+        jge Ewhile                      ; esi < resultado->tamanho
+            push ebx edx esi ecx        ; Se salvan los registros que usa este método
+            push esi                    ; Parametros  sacar5bits - n
             push arch                   ; Parametros  sacar5bits - arch
-            call sacar5bits             ; eax se usa para traer el valor retornado
-			add esp, 8
-
-            push eax                    ; Parametros codificar
-            call codificar              ; eax se usa para traer el valor retornado
-			add esp, 4
-
-			pop ecx
-            pop esi                     ;----------------------------------------------------------------------
-            pop edx                     ; Recuperando los registros
-            pop ebx                     ;----------------------------------------------------------------------
-
-			cmp esi, 0
-			je nonzero
-				add ecx, 1
-			nonzero:
-            mov [ecx], al
-            inc esi
+            call sacar5bits             ; Saca el grupo de 5 bits indicado por esi
+			add esp, 8					; Se adelanta el apuntador de la pila 8, pues sacar5bits requiere 2 parametros
+            push eax                    ; Parametros codificar - cinco
+            call codificar              ; Codifica el valor devuelto por sacar5bits y lo retorna en eax
+			add esp, 4					; Se adelanta el apuntador de la pila 4, pues codificar requiere 1 parametros
+			pop ecx esi edx ebx			; Se recuperan los registros usados en el método
+			cmp esi, 0					; Se compara esi con 0
+			je zero						; esi != 0
+				add ecx, 1				; Se añade una posición al apuntador de la información del archivo resultado
+			zero:
+            mov [ecx], al				; Se guarda en el apuntador de la información del archivo resultado el valor codificado
+            inc esi						; Se incrementa en 1
         jmp Bwhile
         Ewhile:
     }
@@ -311,19 +300,19 @@ void meter5bits(ARCHIVO *arch, int n, unsigned char bits) {
 */
 unsigned char codificar(unsigned char cinco) {
     __asm {
-		mov ebx, 0
-		mov eax, 0
-        mov bl, cinco
-        cmp ebx, 0
-        jl Else
-            cmp ebx, 0x0f ;15
-            jg Else
-                mov al, 0x40 ;64
-                or al, bl
-                jmp fin
-        Else:
-            mov al, 0x20 ;32
-            or al, bl
+		mov ebx, 0						; Se vacia el registro ebx
+		mov eax, 0						; Se vacia el registro eax
+        mov bl, cinco					; Se usa el registro bl para guardar el parametro cinco
+        cmp ebx, 0						; Se compara ebx con 0
+        jl Else							; ebx >= 0
+            cmp ebx, 0x0f				; Se compara ebx con 15
+            jg Else						; ebx <= 15
+                mov al, 0x40			; Se mueve al registro al el valor 64, al = (01000000)_2
+                or al, bl				; Se hace un or bit a bit para poder manipular el 7 bit de bl y dejarlo en 1. ((01000000)_2 or (0000XXXX)_2) = (0100XXXX)_2
+                jmp fin					; Se salta hasta el final del programa
+        Else:							; ebx > 15
+            mov al, 0x20				; Se mueve al registro al el valor 32, al = (00100000)_2
+            or al, bl					; Se hace un or bit a bit para poder manipular el 6 bit de bl y dejarlo en 1. ((00100000)_2 or (0001XXXX)_2) = (0011XXXX)_2
         fin:
     }
 }
@@ -334,31 +323,22 @@ unsigned char codificar(unsigned char cinco) {
 */
 void conversionBinario(ARCHIVO *data, ARCHIVO *resultado) {
     __asm {
-        mov ebx, data
-        mov ecx, resultado
-		mov edi, [ebx+4]
-        mov esi, 0
-        Bwhile: cmp esi, [ebx]
-        jge Ewhile
-            add edi, esi
-            mov edx, [edi]				; bits edx
-
-			push edi
-            push ebx
-            push ecx
-            push esi
-
-            push edx
-            push esi
-            push ecx
-            call meter5bits
-			add esp, 12
-
-            pop esi
-            pop ecx
-            pop ebx
-			pop edi
-            inc esi
+        mov ebx, data					; Se mueve a ebx el apuntador del archivo data
+        mov ecx, resultado				; Se mueve a ebx el apuntador del archivo resultado
+		mov edi, [ebx+4]				; Se mueve a ecx el apuntador a la información del archivo data
+        mov esi, 0						; Se inicializa el contador en esi y en 0
+        Bwhile: cmp esi, [ebx]			; Se compara el tamaño del archivo data con el contador esi
+        jge Ewhile						; esi < data->tamanho
+            add edi, esi				; Se le suma el valor en esi al apuntador de la información del archivo data
+            mov edx, [edi]				; Se guarda el Byte, de la posición apuntada por edi, en ebx
+			push edi ebx ecx esi		; Se salvan los registros usados en este método
+            push edx					; Parametros meter5bits - bits
+            push esi					; Parametros meter5bits - n
+            push ecx					; Parametros meter5bits - arch
+            call meter5bits				; Mete el grupo de 5 bits, en la información del archivo resultado, en la posición indicada por esi
+			add esp, 12					; Se adelanta el apuntador de la pila 12, pues meter5bits requiere 3 parametros
+            pop esi ecx ebx edi			; Se recuperan los registros usados en este método
+            inc esi						; Se incrementa en 1 el valor de esi
         jmp Bwhile
         Ewhile:
     }
