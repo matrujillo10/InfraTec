@@ -1,0 +1,104 @@
+﻿  main.c
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(96): error C4235: se ha utilizado una extensión no estándar: la palabra clave '__asm' no se admite en esta arquitectura
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(97): error C2065: 'mov': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(97): error C2146: error de sintaxis: falta ';' delante del identificador 'ebx'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(97): error C2065: 'ebx': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(97): error C2065: 'Guarda': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(97): error C2146: error de sintaxis: falta ';' delante del identificador 'en'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(97): error C2065: 'en': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(97): error C2146: error de sintaxis: falta ';' delante del identificador 'la'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(97): error C2065: 'la': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(97): error C2146: error de sintaxis: falta ';' delante del identificador 'posicion'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(97): error C2065: 'posicion': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(97): error C2146: error de sintaxis: falta ';' delante del identificador 'del'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(97): error C2065: 'del': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(97): error C2146: error de sintaxis: falta ';' delante del identificador 'primer'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(97): error C2065: 'primer': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(97): error C2146: error de sintaxis: falta ';' delante del identificador 'caracter'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(97): error C2065: 'caracter': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(97): error C2146: error de sintaxis: falta ';' delante del identificador 'apuntador'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(97): error C2065: 'apuntador': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(97): error C2146: error de sintaxis: falta ';' delante del identificador 'p'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2146: error de sintaxis: falta ';' delante del identificador 'cmp'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2065: 'cmp': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2065: 'ebx': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2109: el subíndice requiere una matriz o tipo de puntero
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2059: error de sintaxis: '['
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2065: 'Compara': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2146: error de sintaxis: falta ';' delante del identificador 'el'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2065: 'el': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2146: error de sintaxis: falta ';' delante del identificador 'primer'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2065: 'primer': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2146: error de sintaxis: falta ';' delante del identificador 'caracter'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2065: 'caracter': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2146: error de sintaxis: falta ';' delante del identificador 'que'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2065: 'que': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2146: error de sintaxis: falta ';' delante del identificador 'hay'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2065: 'hay': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2146: error de sintaxis: falta ';' delante del identificador 'en'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2065: 'en': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2146: error de sintaxis: falta ';' delante del identificador 'p'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2065: 'con': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2143: error de sintaxis: falta ';' delante de 'constante'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2064: el término no se evalúa como una función con 337 argumentos
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2146: error de sintaxis: falta ';' delante del identificador 'de'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2065: 'de': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2146: error de sintaxis: falta ';' delante del identificador 'la'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2065: 'la': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2146: error de sintaxis: falta ';' delante del identificador 'tabla'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2065: 'tabla': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(98): error C2146: error de sintaxis: falta ';' delante del identificador 'ascii'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2065: 'ascii': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2146: error de sintaxis: falta ';' delante del identificador 'je'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2065: 'je': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2146: error de sintaxis: falta ';' delante del identificador 'Equals'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2065: 'Equals': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2065: 'Si': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2146: error de sintaxis: falta ';' delante del identificador 'son'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2065: 'son': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2146: error de sintaxis: falta ';' delante del identificador 'diferentes'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2065: 'diferentes': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2065: 'no': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2146: error de sintaxis: falta ';' delante del identificador 'es'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2065: 'es': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2146: error de sintaxis: falta ';' delante del identificador 'el'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2065: 'el': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2146: error de sintaxis: falta ';' delante del identificador 'formato'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2065: 'formato': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2146: error de sintaxis: falta ';' delante del identificador 'esperado'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2065: 'esperado': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2224: el operando izquierdo de '.Por' debe tener el tipo struct/union
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2146: error de sintaxis: falta ';' delante del identificador 'tanto'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2065: 'tanto': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C3872: '0xa1': este carácter no se permite en un identificador
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2065: 'se': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2146: error de sintaxis: falta ';' delante del identificador 'devolverÃ¡'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2065: 'devolverÃ¡': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(99): error C2143: error de sintaxis: falta ';' delante de 'constante'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(100): error C2146: error de sintaxis: falta ';' delante del identificador 'mov'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(100): error C2065: 'mov': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(100): error C2146: error de sintaxis: falta ';' delante del identificador 'esi'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(100): error C2065: 'esi': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(100): error C2065: 'Se': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(100): error C2146: error de sintaxis: falta ';' delante del identificador 'mueve'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(100): error C2065: 'mueve': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(100): error C2146: error de sintaxis: falta ';' delante del identificador 'a'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(100): error C2065: 'a': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(100): error C2146: error de sintaxis: falta ';' delante del identificador 'el'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(100): error C2065: 'el': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(100): error C2146: error de sintaxis: falta ';' delante del identificador 'valor'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(100): error C2065: 'valor': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(100): error C2143: error de sintaxis: falta ';' delante de 'constante'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(101): error C2146: error de sintaxis: falta ';' delante del identificador 'jmp'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(101): error C2065: 'jmp': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(101): error C2146: error de sintaxis: falta ';' delante del identificador 'end'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(101): error C2065: 'end': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(101): error C2065: 'Se': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(101): error C2146: error de sintaxis: falta ';' delante del identificador 'salta'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(101): error C2065: 'salta': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(101): error C2146: error de sintaxis: falta ';' delante del identificador 'hasta'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(101): error C2065: 'hasta': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(101): error C2146: error de sintaxis: falta ';' delante del identificador 'el'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(101): error C2065: 'el': identificador no declarado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(101): error C2146: error de sintaxis: falta ';' delante del identificador 'final'
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(101): fatal error C1003: el recuento de errores supera 100; se detiene la compilación

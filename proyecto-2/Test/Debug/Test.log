@@ -1,1 +1,5 @@
-﻿C:\Program Files\MSBuild\Microsoft.Cpp\v4.0\V140\Platforms\Win32\PlatformToolsets\v140\Toolset.targets(34,5): error MSB8036: The Windows SDK version 8.1 was not found. Install the required version of Windows SDK or change the SDK version in the project property pages or by right-clicking the solution and selecting "Retarget solution".
+﻿  main.c
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(222): warning C4731: 'meter5bits': registro de puntero de marco 'ebp' modificado por código de ensamblado alineado
+c:\users\mille\documents\programación\infratec\proyecto-2\test\main.c(281): warning C4731: 'meter5bits': registro de puntero de marco 'ebp' modificado por código de ensamblado alineado
+  Test.vcxproj -> C:\Users\mille\Documents\programación\InfraTec\proyecto-2\Debug\Test.exe
+  Test.vcxproj -> C:\Users\mille\Documents\programación\InfraTec\proyecto-2\Debug\Test.pdb (Full PDB)

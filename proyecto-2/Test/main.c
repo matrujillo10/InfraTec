@@ -1,6 +1,3 @@
-/*
-PROYECTO 1 FUNDAMENTOS DE INFRAESTRUCTURA TECNOL�GICA
-*/
 #define _CRT_SECURE_NO_DEPRECATE
 #include "stdlib.h"
 #include "stdio.h"
@@ -91,9 +88,9 @@ int main(int argc, char* argv[]) {
  * Procedimiento que convierte el argumento de entrada a la opción adecuada para saber si convertir a ASCII o a binario
  */
 int convertir (char * p) {
+	// Registros usados: EBX, ESI
 	int ans;
     __asm {
-		; Registros usados: EBX, ESI
 		mov ebx, p[0]				; Guarda en ebx la posicion del primer caracter del apuntador p
 		cmp[ebx], ['-']				; Compara el primer caracter que hay en p, con el caracter 45 ('-') de la tabla ascii
         je Equals					; Si son diferentes, no es el formato esperado. Por tanto, se devolverá 0
@@ -122,15 +119,18 @@ int convertir (char * p) {
  * en texto (codificacion en ASCII) y lo guarda en la estructura ARCHIVO apuntada por 'resultado'.
  */
 void conversionTexto(ARCHIVO *arch, ARCHIVO *resultado) {
+	// Registros usados: EAX (AL), EBX, ECX, EDX, ESI
     __asm {
-		; Registros usados: EAX (AL), EBX, ECX, EDX, ESI
 		mov ebx, arch					; Se mueve a ebx el apuntador del archivo arch
 		mov edx, resultado				; Se mueve a edx el apuntador del archivo resultado
         mov esi, 0						; Se inicializa el contador en esi y en 0
 		mov ecx, [edx+4]				; Se mueve a ecx el apuntador a la información del archivo resultado
         Bwhile:	cmp esi, [edx]			; Se compara el tamaño del archivo resultado con el contador
         jge Ewhile                      ; esi < resultado->tamanho
-            push ebx edx esi ecx        ; Se salvan los registros que usa este método
+            push ebx
+			push edx
+			push esi
+			push ecx					; Se salvan los registros que usa este método
             push esi                    ; Parametros  sacar5bits - n
             push arch                   ; Parametros  sacar5bits - arch
             call sacar5bits             ; Saca el grupo de 5 bits indicado por esi
@@ -138,7 +138,10 @@ void conversionTexto(ARCHIVO *arch, ARCHIVO *resultado) {
             push eax                    ; Parametros codificar - cinco
             call codificar              ; Codifica el valor devuelto por sacar5bits y lo retorna en eax
 			add esp, 4					; Se adelanta el apuntador de la pila 4, pues codificar requiere 1 parametros
-			pop ecx esi edx ebx			; Se recuperan los registros usados en el método
+			pop ecx
+			pop esi
+			pop edx
+			pop ebx						; Se recuperan los registros usados en el método
 			cmp esi, 0					; Se compara esi con 0
 			je zero						; esi != 0
 				add ecx, 1				; Se añade una posición al apuntador de la información del archivo resultado
@@ -155,9 +158,9 @@ void conversionTexto(ARCHIVO *arch, ARCHIVO *resultado) {
 * retorna un char que los contiene * en sus 5 bits menos significativos (los restantes bits deben estar en cero)
 */
 unsigned char sacar5bits(ARCHIVO *arch, int n) {
+	// Registros usados: EAX (AL), EBX (BL), ECX (CL), EDX, EDI
 	int numL, numB;
     __asm {
-		; Registros usados: EAX (AL), EBX (BL), ECX (CL), EDX, EDI
         mov edi, arch				; Se mueve al registro edi el apuntador del archivo arch
         mov ecx, n					; Se mueve al registro ecx el valor de n
         mov eax, n					; Se mueve al registro eax el valor de n
@@ -213,15 +216,14 @@ unsigned char sacar5bits(ARCHIVO *arch, int n) {
 /*
 * Procedimiento que introduce los 5 bits menos significativos del byte 'bits' en el n-�simo grupo de 5 bits de la estructura ARCHIVO apuntada por 'arch'
 */
-//TODO: DESARROLLAR COMPLETAMENTE ESTA FUNCION. NO SE PERMITE USAR NOMBRES SIMBOLICOS
 void meter5bits(ARCHIVO *arch, int n, unsigned char bits) {
 	__asm {
-        push ebp
+		push ebp
         mov ebp, esp
         mov ebx, [ebp+8]            ; arch
         mov eax, [ebp+12]           ; n
         mov ecx, [ebp+16]           ; bits
-        mov edi, [eax+8]            ; arch->informacion
+        mov edi, [ebx+4]            ; arch->informacion
 		mov esi, 8					; Se mueve al registro ebx el valor 8
         imul eax, 5					; Se multiplica el valor de eax (n) por 5. (n*5)
 		mov edx, 0					; Se vacia el registro edx
@@ -229,7 +231,8 @@ void meter5bits(ARCHIVO *arch, int n, unsigned char bits) {
         push eax                    ; numL [ebp-4]
         push ebx                    ; numB [ebp-8]
         mov eax, [ebp-4]
-        mov edx, [edi+eax]          ; pnt
+		add eax, edi
+        mov edx, [eax]				; pnt
         mov eax, [edx]              ; letra
         and ecx, 0x1f
         push ecx                    ; tmp [ebp-12]
@@ -272,15 +275,19 @@ void meter5bits(ARCHIVO *arch, int n, unsigned char bits) {
                 shl edi, cl
                 or [edx+1], edi
         fin:
-        pop eax ebx ecx ebp
+        pop eax 
+		pop ebx
+		pop ecx
+		pop ebp
+	}
 }
 
 /*
 * Procedimiento que recibe un byte con informaci�n en los 5 bits menos significativos, y realiza la codificaci�n correspondiente en ASCII
 */
 unsigned char codificar(unsigned char cinco) {
+	// Registros usados: EAX (AL), EBX (BL)
     __asm {
-		; Registros usados: EAX (AL), EBX (BL)
 		mov ebx, 0						; Se vacia el registro ebx
 		mov eax, 0						; Se vacia el registro eax
         mov bl, cinco					; Se usa el registro bl para guardar el parametro cinco
@@ -303,8 +310,8 @@ unsigned char codificar(unsigned char cinco) {
 * como una serie de bytes en la que a cada caracter se le extraen sus �ltimos 5 bits y se guardan en la salida unos a continuaci�n de los otros
 */
 void conversionBinario(ARCHIVO *data, ARCHIVO *resultado) {
+	// Registros usados: EBX, ECX, EDX, EDI, ESI
     __asm {
-		; Registros usados:	EBX, ECX, EDX, EDI, ESI
         mov ebx, data					; Se mueve a ebx el apuntador del archivo data
         mov ecx, resultado				; Se mueve a ebx el apuntador del archivo resultado
 		mov edi, [ebx+4]				; Se mueve a ecx el apuntador a la información del archivo data
@@ -313,13 +320,19 @@ void conversionBinario(ARCHIVO *data, ARCHIVO *resultado) {
         jge Ewhile						; esi < data->tamanho
             add edi, esi				; Se le suma el valor en esi al apuntador de la información del archivo data
             mov edx, [edi]				; Se guarda el Byte, de la posición apuntada por edi, en ebx
-			push edi ebx ecx esi		; Se salvan los registros usados en este método
+			push edi
+			push ebx
+			push ecx
+			push esi					; Se salvan los registros usados en este método
             push edx					; Parametros meter5bits - bits
             push esi					; Parametros meter5bits - n
             push ecx					; Parametros meter5bits - arch
             call meter5bits				; Mete el grupo de 5 bits, en la información del archivo resultado, en la posición indicada por esi
 			add esp, 12					; Se adelanta el apuntador de la pila 12, pues meter5bits requiere 3 parametros
-            pop esi ecx ebx edi			; Se recuperan los registros usados en este método
+            pop esi
+			pop	ecx
+			pop ebx
+			pop edi						; Se recuperan los registros usados en este método
             inc esi						; Se incrementa en 1 el valor de esi
         jmp Bwhile
         Ewhile:
@@ -329,13 +342,12 @@ void conversionBinario(ARCHIVO *data, ARCHIVO *resultado) {
 /*
 * Procedimiento para cargar un archivo de disco
 */
-//NO MODIFICAR
 void cargarArchivo(ARCHIVO *data, char *nomArchivoEntrada)
 {
 	FILE *streamArchivo;
 	int tam;
 	unsigned char * aux;
-	int i;
+	//int i;
 
 	if (!(streamArchivo = fopen(nomArchivoEntrada, "rb")))
 	{
@@ -364,7 +376,6 @@ void cargarArchivo(ARCHIVO *data, char *nomArchivoEntrada)
 /*
 * Procedimiento para guardar un archivo en disco
 */
-//NO MODIFICAR
 void guardarArchivo(ARCHIVO *data, char *nomArchivoSalida)
 {
 	FILE *streamArchivo;

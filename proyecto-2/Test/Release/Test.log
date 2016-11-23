@@ -1,0 +1,28 @@
+﻿  main.c
+main.c(286): error C2143: error de sintaxis: falta ';' delante de '{'
+main.c(291): error C2443: conflicto de tamaño de operando
+main.c(302): error C2412: 'fin': etiqueta redefinida sin distinción de mayúsculas y minúsculas
+  main.c(248): note: vea la declaración de 'fin'
+main.c(310): error C2143: error de sintaxis: falta ';' delante de '{'
+main.c(345): error C2143: error de sintaxis: falta ';' delante de '{'
+main.c(351): error C2065: 'nomArchivoEntrada': identificador no declarado
+main.c(351): warning C4047: 'función': 'const char *' es distinto en los niveles de direccionamiento indirecto de 'int'
+main.c(351): warning C4024: 'fopen': tipos distintos para el parámetro formal y el parámetro real 1
+main.c(353): error C2065: 'nomArchivoEntrada': identificador no declarado
+main.c(366): error C2065: 'data': identificador no declarado
+main.c(366): error C2223: el operando izquierdo de '->tamanho' debe señalar a struct/union
+main.c(367): error C2065: 'data': identificador no declarado
+main.c(367): error C2223: el operando izquierdo de '->informacion' debe señalar a struct/union
+main.c(380): error C2143: error de sintaxis: falta ';' delante de '{'
+main.c(383): error C2065: 'nomArchivoSalida': identificador no declarado
+main.c(383): warning C4047: 'función': 'const char *' es distinto en los niveles de direccionamiento indirecto de 'int'
+main.c(383): warning C4024: 'fopen': tipos distintos para el parámetro formal y el parámetro real 1
+main.c(384): error C2065: 'nomArchivoSalida': identificador no declarado
+main.c(389): error C2065: 'data': identificador no declarado
+main.c(389): error C2223: el operando izquierdo de '->informacion' debe señalar a struct/union
+main.c(389): warning C4022: 'fwrite': no coincide el puntero para el parámetro real 1
+main.c(389): error C2223: el operando izquierdo de '->tamanho' debe señalar a struct/union
+main.c(389): warning C4047: 'función': 'std::size_t' es distinto en los niveles de direccionamiento indirecto de 'FILE *'
+main.c(389): warning C4024: 'fwrite': tipos distintos para el parámetro formal y el parámetro real 2
+main.c(389): error C2198: 'fwrite': no hay suficientes argumentos para la llamada
+main.c(219): fatal error C1075: el elemento llave '{' de la izquierda estaba sin asignar al final del archivo
