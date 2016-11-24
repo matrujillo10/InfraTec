@@ -1,0 +1,5 @@
+﻿  main.c
+c:\users\julián\documents\visual studio 2015\projects\proyecto2-infratec\proyecto2-infratec\scr\main.c(237): warning C4409: tamaño de instrucción máquina no válido
+c:\users\julián\documents\visual studio 2015\projects\proyecto2-infratec\proyecto2-infratec\scr\main.c(331): warning C4409: tamaño de instrucción máquina no válido
+  Proyecto2-Infratec.vcxproj -> C:\Users\Julián\Documents\Visual Studio 2015\Projects\Proyecto2-Infratec\Debug\Proyecto2-Infratec.exe
+  Proyecto2-Infratec.vcxproj -> C:\Users\Julián\Documents\Visual Studio 2015\Projects\Proyecto2-Infratec\Debug\Proyecto2-Infratec.pdb (Partial PDB)

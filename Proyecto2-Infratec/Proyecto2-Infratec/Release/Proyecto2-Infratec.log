@@ -1,0 +1,8 @@
+﻿  main.c
+scr\main.c(237): warning C4409: tamaño de instrucción máquina no válido
+scr\main.c(331): warning C4409: tamaño de instrucción máquina no válido
+  Generando código
+  All 12 functions were compiled because no usable IPDB/IOBJ from previous compilation was found.
+  Generación de código finalizada
+  Proyecto2-Infratec.vcxproj -> C:\Users\Julián\Documents\Visual Studio 2015\Projects\Proyecto2-Infratec\Release\Proyecto2-Infratec.exe
+  Proyecto2-Infratec.vcxproj -> C:\Users\Julián\Documents\Visual Studio 2015\Projects\Proyecto2-Infratec\Release\Proyecto2-Infratec.pdb (Full PDB)
